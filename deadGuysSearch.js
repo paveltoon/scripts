@@ -1,3 +1,4 @@
+var start = new Date().getTime();
 function getActualDate(date) {
     year = date.getFullYear();
     month = date.getMonth() + 1;
@@ -103,4 +104,7 @@ cursor.forEach(function (claim) {
     }
 
     print(ccn + ';' + claimCreated + ';' + personFIO + ';' + trustedFIO + ';' + servName + ';' + creatorDept + ';' + deadObj.deadSurname + ' ' + deadObj.deadName + ' ' + deadObj.deadMiddleName + ';' + kladr)
-})
+});
+var end = new Date().getTime();
+var timer = end - start;
+print("Script works: " + timer + ' ms.')
