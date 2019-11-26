@@ -28,7 +28,7 @@ cursor.forEach(function(claim){
                 delete statusObj[key];
             }
         }
-        statusesObj.push(statusObj)
+        statusesObj.push(statusObj);
     }
     claim.statuses = statusesObj;
     db.claims.save(claim);
