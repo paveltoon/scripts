@@ -1,9 +1,13 @@
-var cursor = db.claims.find({}).limit(10);
-
+var bulk = db.claims.initializeUnorderedBulkOp();
+var cursor = db.claims.find({});
 cursor.forEach(function(claim){
-    var origId = claim._id.valueOf();
-    var findStatuses = db.claims_status.find({ "claimId": origId }).sort({"statusDate": 1}).toArray();
-    
+    if ( claim._id.length == 24 ) {
+        var origId = ObjectId(claim._id.valueOf());
+    } else {
+        var origId = claim._id.valueOf();
+    }
+    var findStatuses = db.claims_status.find({ "claimId": claim._id.valueOf() }).sort({"statusDate": 1}).toArray();
+    var ccn = claim.customClaimNumber;
     var statusesObj = [];
     for(var i in findStatuses) {
       	var stat = findStatuses[i];
@@ -24,13 +28,14 @@ cursor.forEach(function(claim){
             createState : stat.createState
         }
         for(var key in statusObj){
-            if (statusObj[key] == undefined || statusObj[key].trim() == ""){
+            if (statusObj[key] == undefined){
                 delete statusObj[key];
             }
         }
-        statusesObj.push(statusObj);
+        statusesObj.push(statusObj)
     }
-    claim.statuses = statusesObj;
-    db.claims.save(claim);
-    print(claim.customClaimNumber)
+    if (statusesObj.length != 0){
+        bulk.find({ "_id": origId }).update({$set: {statuses: statusesObj}});
+    }
 });
+bulk.execute();
