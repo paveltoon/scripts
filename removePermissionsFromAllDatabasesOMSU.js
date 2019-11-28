@@ -1,5 +1,6 @@
-var srguId = "5901e4b9e716251b9ca48d48";
+var srguId = "58f60b70e7162504f489ed3e";
 var remoteConn = new Mongo("localhost:27017");
+// var remoteConn = new Mongo("10.10.80.100:27017");
 var iter = db.adminCommand({
     listDatabases: 1,
     nameOnly: true
@@ -28,7 +29,7 @@ for (var i = 0; i < iter.length; i++) {
                                         if (findRes.services[y] != null && findRes.services[y] != undefined && findRes.services[y].$id.valueOf() == srguId) {
                                             var deletedResolution = findRes.services.splice(y, 1);
                                             db.resolutions.save(findRes);
-                                            print("Service with id: " + deletedResolution + " was deleted from " + resId + " resolution");
+                                            print("DB: " + dbName + ", User Id: " + user._id + ", Service with id: " + deletedResolution + " was deleted from " + resId + " resolution");
                                         }
                                     }
                                 } else {
