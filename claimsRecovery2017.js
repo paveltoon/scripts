@@ -4,10 +4,9 @@ var sourceStatusesDB = db.claims_status_2017;
 var count = 0;
 var total = 0;
 
-/* var cursor = sourceDB.find({
+var cursor = sourceDB.find({
     "customClaimNumber": {
         $in: [
-            "P001-1076930138-8442187",
             "P001-1076930138-5293961",
             "P001-1076930138-9234876",
             "P001-1076930138-5623053",
@@ -18,14 +17,6 @@ var total = 0;
             "P001-1076930138-9307552",
             "P001-1076930138-7686015",
             "P001-1076930138-5885216"
-        ]
-    }
-});  */
-
-var cursor = sourceDB.find({
-    "customClaimNumber": {
-        $in: [
-            "P001-1076930138-8442187"
         ]
     }
 }); 
