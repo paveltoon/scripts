@@ -60,23 +60,26 @@ db.claims.find({}).forEach(function (claim) {
                 }
             });
             current++;
-            var count = Math.round(current / (total + 0.0) * 100) * scale;
 
-            var result = "";
-            for (var i = 0; i < 100 * scale; i++) {
-                if (i < count) {
-                    result += "#";
-                } else {
-                    result += "_";
-                }
-            }
-
-            print('Claim ' + ccn + ' Progress: ' + result + " " + current + " : " + total);
 
             if (current % 1000 == 0) {
                 bulk.execute();
                 bulk = db.claims.initializeUnorderedBulkOp();
+                var result = "";
+
+                var count = Math.round(current / (total + 0.0) * 100) * scale;
+
+                var result = "";
+                for (var i = 0; i < 100 * scale; i++) {
+                    if (i < count) {
+                        result += "#";
+                    } else {
+                        result += "_";
+                    }
+                }
+                print(result + " " + current + " : " + total);
             }
+
             iteration++;
 
         } else {
