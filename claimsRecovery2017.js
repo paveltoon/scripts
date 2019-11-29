@@ -4,7 +4,7 @@ var sourceStatusesDB = db.claims_status_2017;
 var count = 0;
 var total = 0;
 
-var cursor = sourceDB.find({
+/* var cursor = sourceDB.find({
     "customClaimNumber": {
         $in: [
             "P001-1076930138-8442187",
@@ -18,6 +18,14 @@ var cursor = sourceDB.find({
             "P001-1076930138-9307552",
             "P001-1076930138-7686015",
             "P001-1076930138-5885216"
+        ]
+    }
+});  */
+
+var cursor = sourceDB.find({
+    "customClaimNumber": {
+        $in: [
+            "P001-1076930138-8442187"
         ]
     }
 }); 
@@ -53,10 +61,10 @@ cursor.forEach(function (claim) {
 
     // Test claim & statuses inserts
     if (targetClaim.customClaimNumber == claim.customClaimNumber && targetStatuses.length == statusesCursor.length){
-        sourceDB.deleteOne({
+        sourceDB.remove({
             "customClaimNumber": ccn
         });
-        sourceStatusesDB.deleteMany({
+        sourceStatusesDB.remove({
             "claimId": origId
         })
         print('Claim moved with ID: ' + origId)
