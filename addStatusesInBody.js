@@ -1,7 +1,7 @@
 var scale = 1;
 var total = db.claims.find({}).count();
 var current = 0;
-
+var corrected = 0;
 var bulk = db.claims.initializeUnorderedBulkOp();
 
 db.claims.find({}).forEach(function (claim) {
@@ -12,7 +12,7 @@ db.claims.find({}).forEach(function (claim) {
         bulk = db.claims.initializeUnorderedBulkOp();
     }
     var progress = Math.round((current/total)*100);
-    
+
     var ccn = claim.customClaimNumber;
     var statusesObj = [];
 
@@ -67,6 +67,7 @@ db.claims.find({}).forEach(function (claim) {
                     statuses: statusesObj
                 }
             });
+            corrected++;
             current++;
             print("Claim " + ccn + ' corrected. (' + progress + '%)')
    
@@ -83,4 +84,4 @@ db.claims.find({}).forEach(function (claim) {
 });
 bulk.execute();
 
-print("Done " + current + " : " + total);
+print("Done " + corrected + " : " + total);
