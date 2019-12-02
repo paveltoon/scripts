@@ -1,12 +1,18 @@
 var scale = 1;
 var total = db.claims.find({}).count();
-var iteration = 0;
 var current = 0;
 
 var bulk = db.claims.initializeUnorderedBulkOp();
 
 db.claims.find({}).forEach(function (claim) {
-
+  
+             
+    if (current % 1000 == 0) {
+        bulk.execute();
+        bulk = db.claims.initializeUnorderedBulkOp();
+    }
+    var progress = Math.round((current/total)*100);
+    
     var ccn = claim.customClaimNumber;
     var statusesObj = [];
 
@@ -17,9 +23,10 @@ db.claims.find({}).forEach(function (claim) {
     }
 
     if (claim.statuses) {
-        print("Claim " + ccn + ' already have statuses in body')
-        iteration++;
+        current++;
+        print("Claim " + ccn + ' already have statuses in body. (' + progress + '%)')
     } else {
+        
         var findStatuses = db.claims_status.find({
             "claimId": claim._id.valueOf()
         }).limit(50).sort({
@@ -51,6 +58,7 @@ db.claims.find({}).forEach(function (claim) {
             }
             statusesObj.push(statusObj)
         }
+
         if (statusesObj.length != 0) {
             bulk.find({
                 "_id": origId
@@ -60,31 +68,12 @@ db.claims.find({}).forEach(function (claim) {
                 }
             });
             current++;
-
-
-            if (current % 1000 == 0) {
-                bulk.execute();
-                bulk = db.claims.initializeUnorderedBulkOp();
-                var result = "";
-
-                var count = Math.round(current / (total + 0.0) * 100) * scale;
-
-                var result = "";
-                for (var i = 0; i < 100 * scale; i++) {
-                    if (i < count) {
-                        result += "#";
-                    } else {
-                        result += "_";
-                    }
-                }
-                print(result + " " + current + " : " + total);
-            }
-
-            iteration++;
+            print("Claim " + ccn + ' corrected. (' + progress + '%)')
+   
 
         } else {
-            print('Claim ' + ccn + ' have no statuses in claims_status collection')
-            iteration++;
+            current++;
+            print("Claim " + ccn + ' have no statuses. (' + progress + '%)')
         }
 
 
@@ -94,4 +83,4 @@ db.claims.find({}).forEach(function (claim) {
 });
 bulk.execute();
 
-print("Done " + current + " : " + total + ', with ' + iteration + ' iterations.');
+print("Done " + current + " : " + total);
