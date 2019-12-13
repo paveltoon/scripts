@@ -48,8 +48,8 @@ for (var i = 0; i < iter.length; i++) {
         usersArr.forEach(function (element) {
             var cursor = db.claims.find({
                 "activationDate": {
-                    $gte: ISODate("2019-11-26T21:00:00.000+0000"),
-                    $lte: ISODate("2019-11-27T21:00:00.000+0000")
+                    $gte: ISODate("2019-11-27T21:00:00.000+0000"),
+                    $lte: ISODate("2019-11-28T21:00:00.000+0000")
                 },
                 "senderCode": /^5000000000.*/i,
                 "creatorId": element
@@ -81,7 +81,8 @@ for (var i = 0; i < iter.length; i++) {
                     var srguPassId = claim.service.srguServicePassportId;
                     var statusCode = claim.currStatus.statusCode;
                     var activationDate = getActualDate(claim.activationDate);
-                    
+                    var dept = claim.creatorDeptId;
+
                     if(claim.resultStatus){
                         var resultStatus = claim.resultStatus;
                     } else {
@@ -93,6 +94,7 @@ for (var i = 0; i < iter.length; i++) {
                         print(
                             "Provider ID: " + element + "\n" +
                             "Provider: " + provider + "\n" +
+                            "MFC: " + dept + "\n" +
                             "\n" +
                             "Person ID: " + person + "\n" +
                             "Person: " + personFio + "\n" +
