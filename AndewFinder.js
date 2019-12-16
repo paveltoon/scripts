@@ -9,9 +9,21 @@ function getActualDate(date) {
     if (month < 10) {
         month = '0' + month;
     }
-    
-    return (dt + '.' + month + '.' + year);
+    hour = date.getHours();
+    minute = date.getMinutes();
+    second = date.getSeconds();
+    if (hour < 10) {
+        hour = '0' + hour;
+    }
+    if (minute < 10) {
+        minute = '0' + minute;
+    }
+    if (second < 10) {
+        second = '0' + second;
+    }
+    return (dt + '.' + month + '.' + year + " / " + hour + ':' + minute + ':' + second);
 };
+
 print("Номер заявления;Дата создания;ОКТМО;pnStep2S0AcodeOszn;mfc1.value;mfc1.title")
 var cursor = db.claims.find({
     "service.srguServiceId": "5000000000213945358",
