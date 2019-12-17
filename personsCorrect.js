@@ -1,6 +1,7 @@
 var pes = {
     "B001-7608631664-27": "57960e6ea78e881609de0d70",
-    "B001-4967173383-59": "565ef9988fee5e7495d13d07"
+    "B001-4967173383-59": "565ef9988fee5e7495d13d07",
+    "B503-0242724499-299": "552cd382a78ea01163488293"
 }
 
 var thisClaim = Object.keys(pes);
@@ -16,6 +17,7 @@ for (var i in thisClaim) {
         var personsInfo = [{
             "_id": ObjectId(persId),
             "type": personData.type,
+            "contacts" : [],
             "surname": personData.surname,
             "firstName": personData.firstName,
             "middleName": personData.middleName,
@@ -42,8 +44,7 @@ for (var i in thisClaim) {
             for (var i in claimContacts) {
                 var contactValue = claimContacts[i].value;
                 var contactType = claimContacts[i].type;
-                contacts[i].value = contactValue;
-                contacts[i].type = contactType;
+                contacts.push({value: contactValue, type: contactType});
             }
 
             personsInfo[0].contacts = contacts;
@@ -219,6 +220,12 @@ for (var i in thisClaim) {
         for (var key in personsInfo[0]) {
             if (personsInfo[0][key] == undefined) {
                 delete personsInfo[0][key];
+            }
+        }
+
+        for (var key in personsInfo[0].agreements) {
+            if (personsInfo[0].agreements[key] == undefined) {
+                delete personsInfo[0].agreements[key];
             }
         }
         printjson(personsInfo[0]);
