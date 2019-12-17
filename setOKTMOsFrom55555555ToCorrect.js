@@ -103,7 +103,7 @@ var oktmos = {
     "mfc-hotkovo": "46615000",
     "mfc-serebryanie-prudy": "46772000",
     "mfc-serpuhovg": "46770000",
-    "mfc-serpuhovmr": "46651000",
+    "mfc-serpuhovmr": "46770000",
     "mfc-solnechnogorsk": "46652000",
     "mfc-solnechnogorsk-2": "46652000",
     "mfc-stupino": "46776000",
