@@ -1,19 +1,21 @@
 var pes = {
     "B001-7608631664-27": "57960e6ea78e881609de0d70",
     "B001-4967173383-59": "565ef9988fee5e7495d13d07",
-    "B503-0242724499-299": "552cd382a78ea01163488293"
+    "B503-0242724499-299": "552cd382a78ea01163488293",
+    "M503-0242724499-8655822": "552cd382a78ea01163488293"
 }
 
 var thisClaim = Object.keys(pes);
 
 for (var i in thisClaim) {
     var persId = pes[thisClaim[i]];
+    var ccn = thisClaim[i];
     var personData = db.persons.findOne({
         "_id": ObjectId(persId)
     });
 
     var cursor = db.claims.findOne({
-        "customClaimNumber": thisClaim[i]
+        "customClaimNumber": ccn
     })
 
     if (personData != (undefined && null) && cursor != (undefined && null)) {
@@ -287,6 +289,23 @@ for (var i in thisClaim) {
                 delete personObj[key];
             }
         }
+
+        // UPDATE CLAIMS NEED TESTS
+
+        /*
+        var upd = db.claims.update({
+            "customClaimNumber": ccn
+        }, {
+            $set: {
+                persons: personsArr,
+                person: personObj,
+                personsInfo: personsInfo
+            }
+        });
+
+        print("claim: " + ccn + ' updated: ' + upd.nModified + ' / ' + upd.nMatched); 
+        */
+
         printjson(personsInfo[0]);
         printjson(personsArr);
         printjson(personObj);

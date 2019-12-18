@@ -48,8 +48,8 @@ for (var i = 0; i < iter.length; i++) {
         usersArr.forEach(function (element) {
             var cursor = db.claims.find({
                 "activationDate": {
-                    $gte: ISODate("2019-11-27T21:00:00.000+0000"),
-                    $lte: ISODate("2019-11-28T21:00:00.000+0000")
+                    $gte: ISODate("2019-11-28T21:00:00.000+0300"),
+                    $lte: ISODate("2019-11-29T21:00:00.000+0300")
                 },
                 "senderCode": /^5000000000.*/i,
                 "creatorId": element
