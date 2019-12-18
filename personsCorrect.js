@@ -17,7 +17,7 @@ for (var i in thisClaim) {
         var personsInfo = [{
             "_id": ObjectId(persId),
             "type": personData.type,
-            "contacts" : [],
+            "contacts": [],
             "surname": personData.surname,
             "firstName": personData.firstName,
             "middleName": personData.middleName,
@@ -44,7 +44,10 @@ for (var i in thisClaim) {
             for (var i in claimContacts) {
                 var contactValue = claimContacts[i].value;
                 var contactType = claimContacts[i].type;
-                contacts.push({value: contactValue, type: contactType});
+                contacts.push({
+                    value: contactValue,
+                    type: contactType
+                });
             }
 
             personsInfo[0].contacts = contacts;
@@ -90,6 +93,11 @@ for (var i in thisClaim) {
                 "houseFiasCode": adressData.houseFiasCode
             }
 
+            for (var key in registrationAddress) {
+                if (registrationAddress[key] == undefined) {
+                    delete registrationAddress[key];
+                }
+            }
             personsInfo[0].registrationAddress = registrationAddress;
         }
 
@@ -123,7 +131,11 @@ for (var i in thisClaim) {
                 "streetFiasCode": localData.streetFiasCode,
                 "houseFiasCode": localData.houseFiasCode
             }
-
+            for (var key in locationAddress) {
+                if (locationAddress[key] == undefined) {
+                    delete locationAddress[key];
+                }
+            }
             personsInfo[0].locationAddress = locationAddress;
         }
 
@@ -153,7 +165,11 @@ for (var i in thisClaim) {
                 "streetFiasCode": birthData.streetFiasCode,
                 "houseFiasCode": birthData.houseFiasCode
             }
-
+            for (var key in birthAddress) {
+                if (birthAddress[key] == undefined) {
+                    delete birthAddress[key];
+                }
+            }
             personsInfo[0].birthAddress = birthAddress;
         }
 
@@ -183,7 +199,11 @@ for (var i in thisClaim) {
                 "streetFiasCode": workData.streetFiasCode,
                 "houseFiasCode": workData.houseFiasCode
             }
-
+            for (var key in ipWorkPlaceAddress) {
+                if (ipWorkPlaceAddress[key] == undefined) {
+                    delete ipWorkPlaceAddress[key];
+                }
+            }
             personsInfo[0].ipWorkPlaceAddress = ipWorkPlaceAddress;
         }
 
@@ -213,10 +233,23 @@ for (var i in thisClaim) {
                 "createBy": docData.createBy,
                 "lastModifiedBy": docData.lastModifiedBy
             }
-
+            for (var key in currIdentityDoc) {
+                if (currIdentityDoc[key] == undefined) {
+                    delete currIdentityDoc[key];
+                }
+            }
             personsInfo[0].currIdentityDoc = currIdentityDoc;
 
+        } else if (personData.currIdentityDoc) {
+            var currIdentityDoc = Object.assign({}, personData.currIdentityDoc);
+            for(var int in currIdentityDoc){
+                if(typeof currIdentityDoc[int] == "number"){
+                    currIdentityDoc[int] = NumberInt(currIdentityDoc[int]);
+                }
+            }
+            personsInfo[0].currIdentityDoc = currIdentityDoc;
         }
+
         for (var key in personsInfo[0]) {
             if (personsInfo[0][key] == undefined) {
                 delete personsInfo[0][key];
@@ -228,6 +261,7 @@ for (var i in thisClaim) {
                 delete personsInfo[0].agreements[key];
             }
         }
+
         printjson(personsInfo[0]);
     }
 }
