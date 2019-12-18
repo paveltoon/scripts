@@ -12,7 +12,11 @@ for (var i in thisClaim) {
         "_id": ObjectId(persId)
     });
 
-    if (personData != (undefined && null)) {
+    var cursor = db.claims.findOne({
+        "customClaimNumber": thisClaim[i]
+    })
+
+    if (personData != (undefined && null) && cursor != (undefined && null)) {
 
         var personsInfo = [{
             "_id": ObjectId(persId),
@@ -242,8 +246,8 @@ for (var i in thisClaim) {
 
         } else if (personData.currIdentityDoc) {
             var currIdentityDoc = Object.assign({}, personData.currIdentityDoc);
-            for(var int in currIdentityDoc){
-                if(typeof currIdentityDoc[int] == "number"){
+            for (var int in currIdentityDoc) {
+                if (typeof currIdentityDoc[int] == "number") {
                     currIdentityDoc[int] = NumberInt(currIdentityDoc[int]);
                 }
             }
@@ -262,6 +266,29 @@ for (var i in thisClaim) {
             }
         }
 
+        // Claim Persons array
+        var personsArr = [persId];
+
+        // Claim person object
+        var personObj = {
+            surname: personsInfo[0].surname,
+            firstName: personsInfo[0].firstName,
+            middleName: personsInfo[0].middleName,
+            applicantType: personsInfo[0].type,
+
+        }
+
+        if (personObj.surname != undefined && personObj.firstName != undefined && personObj.middleName != undefined) {
+            personObj.fio = personsInfo[0].surname + ' ' + personsInfo[0].firstName + ' ' + personsInfo[0].middleName;
+        }
+
+        for (var key in personObj) {
+            if (personObj[key] == undefined) {
+                delete personObj[key];
+            }
+        }
         printjson(personsInfo[0]);
+        printjson(personsArr);
+        printjson(personObj);
     }
 }
