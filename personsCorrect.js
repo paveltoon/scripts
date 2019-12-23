@@ -1,9 +1,29 @@
 var pes = {
-    "B001-7608631664-27": "57960e6ea78e881609de0d70",
-    "B001-4967173383-59": "565ef9988fee5e7495d13d07",
-    "B503-0242724499-299": "552cd382a78ea01163488293",
-    "M503-0242724499-8655822": "552cd382a78ea01163488293",
-    "B505-3660696490-31353893": "5ddfd5bece8ad00001fe77aa"
+    "B503-0536508936-31357647": "5688538ca78e08d778401608",
+    "B503-1846873177-31357508": "58072affa78e0d70b86d7c59",
+    "B503-8726499774-31357309": "5697bb52a78e8a3f3957bdbe",
+    "M503-7302429189-31336424": "5baa4a43a78ebb34851d79ce",
+    "B504-1273836225-31349203": "5b3b9589a78ec59ef8e9c5be",
+    "B503-4640355941-31333973": "5a4025a7a78e30c3e67fc0fb",
+    "B503-8842573423-31357104": "55df4143a78e425c6f415e6f",
+    "B503-2941502057-31357577": "572c2ae7a78e5d89f8cebe69",
+    "B503-3249856239-31357425": "57bad839a78ec1553e44caef",
+    "B504-8473681689-31325215": "5de0c766ce8ad00001f3f195",
+    "M502-8484488560-31344086": "592e8b6ea78e1f04d4a894b3",
+    "M503-1814045323-31348995": "5ae06ae3a78e3426f71fa49d",
+    "M503-0450145708-31358993": "5bcafacca78e24e3b5d9cf0a",
+    "M505-8419327355-31351323": "5de8a04824aa9a000192b746",
+    "M505-8449758702-31355283": "588213d6a78e50fb3345fdee",
+    "M503-1629330089-31346980": "5829d544a78e3d8000cffaa9",
+    "M503-5545447495-31325458": "5d77a4ec7979c40001dc9447",
+    "M502-2223570049-31344378": "5bc852f3a78e71a2e44458c7",
+    "B508-9578849282-31338526": "5dd7ac8412f7920001214d01",
+    "B508-9578849282-31338631": "58623a63a78e20012bd05769",
+    "M503-1811785778-31351247": "5c541f22f2a243ce27d31ab0",
+    "B504-2917264208-31341701": "5deb8f1e24aa9a0001b93e15",
+    "M503-5423396444-31356246": "5cebf4a25ea290ade3365a5c",
+    "M503-9119154545-31351773": "5a7077a1a78e4baebdf0bc53",
+    "M503-5345824251-31352204": "59fb0a7ca78e01b7b4e671fb"
 }
 
 var thisClaim = Object.keys(pes);
@@ -278,7 +298,6 @@ for (var i in thisClaim) {
             firstName: personsInfo[0].firstName,
             middleName: personsInfo[0].middleName,
             applicantType: personsInfo[0].type,
-
         }
 
         if (personObj.surname != undefined && personObj.firstName != undefined && personObj.middleName != undefined) {
@@ -292,23 +311,18 @@ for (var i in thisClaim) {
         }
 
         // UPDATE CLAIMS NEED TESTS
-
-        /*
         var upd = db.claims.update({
             "customClaimNumber": ccn
         }, {
             $set: {
-                persons: personsArr,
-                person: personObj,
-                personsInfo: personsInfo
+                "persons": personsArr,
+                "person": personObj,
+                "personsInfo": personsInfo
             }
+        },{
+            multi: true
         });
-
-        print("claim: " + ccn + ' updated: ' + upd.nModified + ' / ' + upd.nMatched); 
-        */
-
-        printjson(personsInfo[0]);
-        printjson(personsArr);
-        printjson(personObj);
+        
+        print("claim: " + ccn + ' updated: ' + upd.nModified + ' / ' + upd.nMatched);
     }
 }
