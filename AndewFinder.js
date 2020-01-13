@@ -28,7 +28,7 @@ print("Номер заявления;Дата создания;ОКТМО;pnStep
 var cursor = db.claims.find({
     "service.srguServiceId": "5000000000213945358",
     "activationDate": {
-        $gte: ISODate("2019-12-18T00:00:00.000+0300")
+        $gte: ISODate("2019-11-22T00:00:00.000+0300")
     },
     "customClaimNumber": /^P001.*/i
 });
