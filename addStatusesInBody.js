@@ -1,26 +1,16 @@
 var scale = 1;
-var total = db.claims.find({}).count();
+var total = db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODate("2019-12-31T21:00:00.000+0000") } }).count();
 var current = 0;
 var corrected = 0;
 var bulk = db.claims.initializeUnorderedBulkOp();
 
-db.claims.find({}).forEach(function (claim) {
+db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODate("2019-12-31T21:00:00.000+0000") } }).forEach(function (claim) {
   
-             
-    if (current % 1000 == 0) {
-        bulk.execute();
-        bulk = db.claims.initializeUnorderedBulkOp();
-    }
     var progress = Math.round((current/total)*100);
 
     var ccn = claim.customClaimNumber;
     var statusesObj = [];
-
-    if (claim._id.length == 24) {
-        var origId = ObjectId(claim._id.valueOf());
-    } else {
-        var origId = claim._id.valueOf();
-    }
+    var origId = claim._id;
 
     if (claim.statuses) {
         current++;
@@ -64,14 +54,17 @@ db.claims.find({}).forEach(function (claim) {
                 "_id": origId
             }).update({
                 $set: {
-                    statuses: statusesObj
+                    "statuses": statusesObj
                 }
             });
             corrected++;
             current++;
             print("Claim " + ccn + ' corrected. (' + progress + '%)')
    
-
+            if (current % 1000 == 0) {
+                bulk.execute();
+                bulk = db.claims.initializeUnorderedBulkOp();
+            }
         } else {
             current++;
             print("Claim " + ccn + ' have no statuses. (' + progress + '%)')
