@@ -130,7 +130,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 };
 
 var claimCursor = db.getCollection("claims").find(
-	{ "customClaimNumber": { $in: ["M503-8362758548-22608940"] } }
+	{ "customClaimNumber": { $in: ["P001-6958344111-31963876"] } }
 ).addOption(DBQuery.Option.noTimeout);
 
 claimCursor.forEach(function(claim){
@@ -247,7 +247,7 @@ claimCursor.forEach(function(claim){
     if (suspenseReason != undefined || suspenseReason != null) {
 
         var statuses70 = db.claims_status.find({
-            "claimId": origClaimId,
+            "claimId": origClaimId.valueOf(),
             $or: [{
                 "statusCode": "70"
             }, {
@@ -256,10 +256,10 @@ claimCursor.forEach(function(claim){
         }).sort({
             "statusDate": 1
         }).toArray();
-        
         for (var j = 0; j < statuses70.length; j++) {
-            if (statuses70[j].statusCode == "70" && statuses70[j + 1] != undefined && statuses70[j + 1].statusCode == "71") {
-                suspenseDaysResult += daysBetweenDates(statuses70[j].statusDate, statuses70[j + 1].statusDate);
+            if (statuses70[j].statusCode == "70" && statuses70[j + 1]!= undefined && statuses70[j + 1].statusCode == "71") {
+				suspenseDaysResult += daysBetweenDates(statuses70[j].statusDate, statuses70[j + 1].statusDate);
+				
             }
         }
     }
@@ -315,7 +315,7 @@ claimCursor.forEach(function(claim){
     "senderCode": "RLDD"
     }
 
-    db.claims_status_mku.save(mkuObject);
+   // db.claims_status_mku.save(mkuObject);
     
     
 	

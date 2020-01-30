@@ -7,28 +7,14 @@ var total = 0;
 var cursor = sourceDB.find({
     "customClaimNumber": {
         $in: [
-            "P001-1076930138-5293961",
-            "P001-1076930138-9234876",
-            "P001-1076930138-5623053",
-            "P001-1076930138-5787236",
-            "P001-1076930138-9318289",
-            "P001-1076930138-9547961",
-            "P001-1076930138-9306449",
-            "P001-1076930138-9307552",
-            "P001-1076930138-7686015",
-            "P001-1076930138-5885216"
+            "P001-6189067611-9601380"
         ]
     }
 }); 
 
 cursor.forEach(function (claim) {
 
-    if (typeof claim._id == 'ObjectId') {
-        var cId = ObjectId(claim._id.valueOf());
-    } else {
-        var cId = claim._id.valueOf();
-    }
-
+    var cId = claim._id;
     var origId = claim._id.valueOf();
     var ccn = claim.customClaimNumber;
 
