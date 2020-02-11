@@ -130,8 +130,8 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 };
 
 var claimCursor = db.getCollection("claims").find(
-	{ "customClaimNumber": { $in: ["P001-6958344111-31963876"] } }
-).addOption(DBQuery.Option.noTimeout);
+	{ "customClaimNumber": { $in: ["50-0-1-329/3001/2019-16485"] } }
+	).addOption(DBQuery.Option.noTimeout);
 
 claimCursor.forEach(function(claim){
 	iteration++;
@@ -315,7 +315,7 @@ claimCursor.forEach(function(claim){
     "senderCode": "RLDD"
     }
 
-   // db.claims_status_mku.save(mkuObject);
+    db.claims_status_mku.save(mkuObject);
     
     
 	

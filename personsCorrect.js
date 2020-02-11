@@ -1,5 +1,5 @@
 var pes = {
-    "P001-6707623780-32203939": "5b98e044a78efb5287e14ea7"
+    "P001-0558656878-32528895": "5cd141680b523780158c804e"
 }
 
 var thisClaim = Object.keys(pes);
@@ -75,6 +75,19 @@ for (var i in thisClaim) {
             }
         }
 
+        //Add Birth Address in personsIinfo
+        if (fullPerson.birthAddressId != (undefined && null)) {
+            var birthAddressId;
+            fullPerson.birthAddressId.length == 24 ? birthAddressId = ObjectId(fullPerson.birthAddressId) : birthAddressId = fullPerson.birthAddressId;
+            var birthAddressFind = db.addresses.findOne({
+                "_id": birthAddressId
+            });
+            if (birthAddressFind != (undefined && null)) {
+                var fullbirthAddress = birthAddressFind;
+                delete fullbirthAddress._class;
+                fullPerson.birthAddress = fullbirthAddress;
+            }
+        }
 
         //Add person in claim
         var personObj

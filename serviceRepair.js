@@ -30,12 +30,17 @@ var oktmos = {
     "46767000": "mfc-protvino",
     "46790000": "mfc-elektrostal",
     "46744000": "mfc-krasnogorsk",
+    "46768000": "mfc-ramenskoe",
     "46641000": "mfc-odincovo",
+    "46758000": "mfc-pushkino",
+    "46728000": "mfc-sergiev-posad",
     "46748000": "mfc-luberci",
     "46750000": "mfc-narofominsk",
     "46762000": "mfc-pyshino",
+    "46788000": "mfc-shhelkovo",
     "46605000": "mfc-volokolamsk",
     "46648000": "mfc-ramenskoe",
+    "46771000": "mfc-solnechnogorsk",
     "46652000": "mfc-solnechnogorsk",
     "46784000": "mfc-chehov",
     "46756000": "mfc-ozery",
@@ -91,16 +96,9 @@ var oktmos = {
     "46791000": "mfc-elektrogorsk",
     "46778000": "mfc-taldom"
 };
+
 var remoteCon = new Mongo("10.10.80.100:27017");
-var cursor = db.claims.find({
-    "service.srguServicePassportId": {
-        $exists: false
-    },
-    "claimCreate": {
-        $gte: ISODate("2019-12-20T21:00:00+0000"),
-        $lte: ISODate("2020-01-06T21:00:00+0000")
-    }
-}).forEach(function (claim) {
+var cursor = db.claims.find({ "customClaimNumber": "M508-4837679797-32252818" }).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
     if (claim.service != (undefined && null)) {
         var srguId = claim.service.srguServiceId
@@ -145,16 +143,10 @@ var cursor = db.claims.find({
             var wrongOKTMO = db.claims.find({
                 "oktmo": claim.oktmo,
                 "service.srguServiceId": srguId,
-                "service.srguServiceName": {
-                    $exists: true
-                },
-                "service.srguDepartmentId": {
+                "service.name": {
                     $exists: true
                 },
                 "service.srguDepartmentName": {
-                    $exists: true
-                },
-                "service.srguServicePassportId": {
                     $exists: true
                 },
                 "activationDate": {
