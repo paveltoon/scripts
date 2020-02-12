@@ -40,7 +40,14 @@ var oktmos = {
     "46773000": "mfc-vlasiha",
     "46760000": "mfc-podolsk-kirova",
     "46766000": "mfc-ryza",
+    "46708000": "mfc-volokolamsk",
     "46704000": "mfc-balashiha",
+    "46622000": "mfc-kolomna",
+    "46755000": "mfc-odincovo",
+    "46639000": "mfc-noginsk",
+    "46612101": "mfc-egorievsk",
+    "46752000": "mfc-lotoshino",
+    "46628407": "mfc-leninskiy",
     "46786000": "mfc-shatura",
     "46741000": "mfc-lytkarino",
     "46722000": "mfc-egorievsk",
@@ -65,6 +72,7 @@ var oktmos = {
     "46735000": "mfc-kashira",
     "46730000": "mfc-zvenigorod",
     "46629000": "mfc-lotoshino",
+    "46710000":"mfc-voskresensk",
     "46725000": "mfc-jykovskiy",
     "46715000": "mfc-dmitrov",
     "46781000": "mfc-chernogolovka",
@@ -73,12 +81,26 @@ var oktmos = {
 };
 
 db.claims.find({
-    "creatorDeptId": "",
-    "deptId": "",
     "currStatus.statusCode": "41",
-    "oktmo": {
-        $ne: "99999999"
-    }
+    "deptId": "",
+    "creatorDeptId": "",
+    $and: [{
+        "oktmo": {
+            $ne: "99999999"
+        }
+    }, {
+        "oktmo": {
+            $ne: "55555555"
+        }
+    }, {
+        "oktmo": {
+            $ne: "46000000"
+        }
+    }, {
+        "oktmo": {
+            $ne: "10000000"
+        }
+    }]
 }).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
     var deptId = oktmos[claim.oktmo];
@@ -100,7 +122,7 @@ db.claims.find({
             multi: true
         });
         print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched);
-    } else if(deptId != undefined){
+    } else if (deptId != undefined) {
         var upd2 = db.claims.update({
             "customClaimNumber": ccn
         }, {

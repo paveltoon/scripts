@@ -9,44 +9,46 @@ db.claims.find({
     "personsInfo": {
         $exists: true
     }
-}).limit(10).forEach(function(claim){
+}).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
-    var personsInfo = claim.personsInfo[0];
-    var person;
-    if(personsInfo.type == "JURIDICAL"){
-        person = {
-            "orgName": personsInfo.orgName,
-            "applicantType": personsInfo.type,
-        }
-    } else {
-        person = {
-            "surname": personsInfo.surname,
-            "firstName": personsInfo.firstName,
-            "middleName": personsInfo.middleName,
-            "applicantType": personsInfo.type,
-            "fio": personsInfo.surname + ' ' + personsInfo.firstName + ' ' + personsInfo.middleName,
-        }
-    }
-    for(var i in person){
-        if(person[i] == undefined){
-            delete person[i];
-        }
-    }
-
-    //Update & print
-    try{
-        var upd = db.claims.update({
-            "customClaimNumber": ccn
-        },{
-            $set: {
-                "person": person
+    if (claim.personsInfo[0] != undefined) {
+        var personsInfo = claim.personsInfo[0];
+        var person;
+        if (personsInfo.type == "JURIDICAL") {
+            person = {
+                "orgName": personsInfo.orgName,
+                "applicantType": personsInfo.type,
             }
-        },{
-            multi: true
-        });
-        print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched);
-    } catch(err){
-        print(ccn + ' ' + err.message)
+        } else {
+            person = {
+                "surname": personsInfo.surname,
+                "firstName": personsInfo.firstName,
+                "middleName": personsInfo.middleName,
+                "applicantType": personsInfo.type,
+                "fio": personsInfo.surname + ' ' + personsInfo.firstName + ' ' + personsInfo.middleName,
+            }
+        }
+        for (var i in person) {
+            if (person[i] == undefined) {
+                delete person[i];
+            }
+        }
+
+        //Update & print
+        try {
+            var upd = db.claims.update({
+                "customClaimNumber": ccn
+            }, {
+                $set: {
+                    "person": person,
+                    "persons.0": personsInfo._id.valueOf()
+                }
+            }, {
+                multi: true
+            });
+            print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched);
+        } catch (err) {
+            print(ccn + ' ' + err.message)
+        }
     }
-    
 });

@@ -27,7 +27,7 @@ function getDayOfYear(date){
     return days;
 };
 
-function getCalendar(oktmo, year){
+function getCalendar(year){
 	var calendar = db.calendars.findOne(
 		{ 
 			$and: [ 
@@ -35,7 +35,7 @@ function getCalendar(oktmo, year){
 					"year": year 
 				}, 
 				{ 
-					"oktmo": oktmo 
+					"oktmo": "" 
 				} 
 			]
 		}
@@ -66,7 +66,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 		calNotFoundException.message = "Calendar not found for year: ";
 	
 	var claimYear = NumberInt(startDate.getFullYear());	
-	var holidays = getCalendar(oktmo, claimYear);
+	var holidays = getCalendar(claimYear);
 		if(holidays == "Not found"){
 			calNotFoundException.year = claimYear;
 			return calNotFoundException;
@@ -82,7 +82,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 			if(day > endOfClaimYearDay){
 				day -= endOfClaimYearDay;
 				var newClaimYear = claimYear + 1;
-				holidays = getCalendar(oktmo, newClaimYear);
+				holidays = getCalendar(newClaimYear);
 				
 				if(holidays == "Not found"){
 					calNotFoundException.year = newClaimYear;
@@ -106,7 +106,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 		if(day > endOfClaimYearDay){
 			day -= endOfClaimYearDay;
 			var newClaimYear = claimYear + 1;
-			holidays = getCalendar(oktmo, newClaimYear);
+			holidays = getCalendar(newClaimYear);
 			
 			if(holidays == "Not found"){
 				calNotFoundException.year = newClaimYear;
@@ -130,7 +130,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 };
 
 var claimCursor = db.getCollection("claims").find(
-	{ "customClaimNumber": { $in: ["50-0-1-329/3001/2019-16485"] } }
+	{ "customClaimNumber": { $in: ["M503-4809356088-24963854"] } }
 	).addOption(DBQuery.Option.noTimeout);
 
 claimCursor.forEach(function(claim){

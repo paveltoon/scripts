@@ -1,14 +1,17 @@
 var emailArr = [
-    "samatveev@bk.ru",
+    "zara.zet00@mail.ru",
     "sohosoho@bk.ru",
-    "djsstar@mail.ru",
-    "demidov191086@yandex.ru",
-    "002pan@bk.ru",
-    "PashaPetroww@yandex.ru",
-    "lulka.s@mail.ru",
-    "18smc@bk.ru",
-    "natashareg1982@mail.ru",
-    "yelena.slesareva@inbox.ru"
+    "makaryshka00@mail.ru",
+    "kui-stupino@mail.ru",
+    "agap06@mail.ru",
+    "bos-y@inbox.ru",
+    "almekacheb@yandex.ru",
+    "volckova.ingulia@rambler.ru",
+    "malkiss555@rambler.ru",
+    "ivanovao_test@rambler.ru",
+    "kolesnikova_katy2015@mail.ru",
+    "p13152p@yandex.ru",
+    "zcnhtrjd@rambler.ru"
 ];
 
 function getActualDate(date){
@@ -54,7 +57,10 @@ cursor.forEach(function (claim){
     var created = getActualDate(claim.claimCreate);
     var servName = claim.service.name;
     var operatorFio = claim.providerName;
-    var personFio = claim.person.fio;
+    var personFio;
+    if(claim.person != undefined){
+        personFio = claim.person.fio;
+    } 
     var email = emailArr[i];
 
     print(ccn + ';' + dept + ';' + created + ';' + servName + ';' + operatorFio + ';' + personFio + ';' + email);
