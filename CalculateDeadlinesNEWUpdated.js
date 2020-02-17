@@ -130,7 +130,9 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo){
 };
 
 var claimCursor = db.getCollection("claims").find(
-	{ "customClaimNumber": { $in: ["M503-4809356088-24963854"] } }
+	{ "customClaimNumber": { $in: [
+		"P001-7694583886-16522621"
+	] } }
 	).addOption(DBQuery.Option.noTimeout);
 
 claimCursor.forEach(function(claim){
