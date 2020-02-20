@@ -16,7 +16,7 @@ db.claims.find({
             }
         }
     }]
-}).limit(10).forEach(function (claim) {
+}).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
     var updateObj = {}
 
