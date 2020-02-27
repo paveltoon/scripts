@@ -1,28 +1,33 @@
 var scale = 1;
-var total = db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODate("2019-12-31T21:00:00.000+0000") } }).count();
+var total = db.claims.find({
+    "activationDate": {
+        $gte: ISODate("2017-12-31T21:00:00.000+0000"),
+        $lte: ISODate("2019-12-31T21:00:00.000+0000")
+    }
+}).count();
 var current = 0;
 var corrected = 0;
 var bulk = db.claims.initializeUnorderedBulkOp();
 
-db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODate("2019-12-31T21:00:00.000+0000") } }).forEach(function (claim) {
-  
-    var progress = Math.round((current/total)*100);
+db.claims.find({
+    "activationDate": {
+        $gte: ISODate("2017-12-31T21:00:00.000+0000"),
+        $lte: ISODate("2019-12-31T21:00:00.000+0000")
+    }
+}).limit(1).forEach(function (claim) {
+    var progress = Math.round((current / total) * 100);
 
     var ccn = claim.customClaimNumber;
-    var statusesObj = [];
+    var statusesArr = [];
     var origId = claim._id;
 
-    if (claim.statuses) {
-        current++;
-        print("Claim " + ccn + ' already have statuses in body. (' + progress + '%)')
-    } else {
-        
-        var findStatuses = db.claims_status.find({
-            "claimId": claim._id.valueOf()
-        }).limit(50).sort({
-            "statusDate": 1
-        }).toArray();
+    var findStatuses = db.claims_status.find({
+        "claimId": claim._id.valueOf()
+    }).limit(50).sort({
+        "statusDate": 1
+    }).toArray();
 
+    if (findStatuses.length != 0 && findStatuses.length < 50) {
         for (var i in findStatuses) {
             var stat = findStatuses[i];
             var statusObj = {
@@ -46,21 +51,21 @@ db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODa
                     delete statusObj[key];
                 }
             }
-            statusesObj.push(statusObj)
+            statusesArr.push(statusObj)
         }
 
-        if (statusesObj.length != 0) {
+        if (statusesArr.length != 0) {
             bulk.find({
                 "_id": origId
             }).update({
                 $set: {
-                    "statuses": statusesObj
+                    "statuses": statusesArr
                 }
             });
             corrected++;
             current++;
-            print("Claim " + ccn + ' corrected. (' + progress + '%)')
-   
+            print("Claim " + ccn + ' has been corrected. (' + progress + '%)')
+
             if (current % 1000 == 0) {
                 bulk.execute();
                 bulk = db.claims.initializeUnorderedBulkOp();
@@ -69,10 +74,7 @@ db.claims.find({ "statuses": { $exists: false }, "activationDate": { $gte: ISODa
             current++;
             print("Claim " + ccn + ' have no statuses. (' + progress + '%)')
         }
-
-
     }
-
 
 });
 bulk.execute();
