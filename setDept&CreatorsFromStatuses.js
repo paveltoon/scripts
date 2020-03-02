@@ -72,7 +72,7 @@ var oktmos = {
     "46735000": "mfc-kashira",
     "46730000": "mfc-zvenigorod",
     "46629000": "mfc-lotoshino",
-    "46710000":"mfc-voskresensk",
+    "46710000": "mfc-voskresensk",
     "46725000": "mfc-jykovskiy",
     "46715000": "mfc-dmitrov",
     "46781000": "mfc-chernogolovka",
@@ -81,26 +81,11 @@ var oktmos = {
 };
 
 db.claims.find({
-    "currStatus.statusCode": "41",
-    "deptId": "",
-    "creatorDeptId": "",
-    $and: [{
-        "oktmo": {
-            $ne: "99999999"
-        }
-    }, {
-        "oktmo": {
-            $ne: "55555555"
-        }
-    }, {
-        "oktmo": {
-            $ne: "46000000"
-        }
-    }, {
-        "oktmo": {
-            $ne: "10000000"
-        }
-    }]
+    "activationDate": {
+        $gte: ISODate("2019-12-20T21:00:00.000+0000"),
+        $lte: ISODate("2020-01-06T21:00:00.000+0000")
+    },
+    "deptId": "mfc-jeleznodorojniy"
 }).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
     var deptId = oktmos[claim.oktmo];

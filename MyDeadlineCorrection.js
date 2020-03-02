@@ -1,6 +1,12 @@
+// Claims list
 var claimArr = [
-	"P001-4304947101-13186013"
+	"P001-0033123805-12739805",
+	"P001-4304947101-11836610",
+	"P001-7244679550-15499723",
+	"P001-2775438034-16981869"
 ]
+// Task number
+var taskNum = "EISOUSUP-5627"
 
 function getActualDate(date) {
 	year = date.getFullYear();
@@ -72,6 +78,7 @@ cursor.forEach(function (claim) {
 		var newDeadlineStage = {
 			"stageType": "DEADLINE_TRANSFER",
 			"stageName": "Корректировка срока",
+			"comment": taskNum,
 			"deadline": diffDeadline,
 			"deadlineInWorkDays": false
 		};
