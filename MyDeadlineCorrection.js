@@ -1,5 +1,5 @@
 var claimArr = [
-	"P001-2726188126-22561934"
+	"P001-4304947101-13186013"
 ]
 
 function getActualDate(date) {
@@ -114,7 +114,7 @@ cursor.forEach(function (claim) {
 				"deadlineStages": deadlineStages
 			}
 		});
-		print("Claim: " + ccn + " has been corrected, progress: " + deadlineUpdate.nModified + ' / ' + deadlineUpdate.nMatched)
+		print("Claim: " + ccn + " has been corrected, deadline " + newDaysToDeadline + " progress: " + deadlineUpdate.nModified + ' / ' + deadlineUpdate.nMatched)
 		
 		var mkuObject = {
 			"id": null,
