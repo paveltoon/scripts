@@ -14,7 +14,7 @@ db.claims.find({
         $gte: ISODate("2017-12-31T21:00:00.000+0000"),
         $lte: ISODate("2019-12-31T21:00:00.000+0000")
     }
-}).limit(1).forEach(function (claim) {
+}).forEach(function (claim) {
     var progress = Math.round((current / total) * 100);
 
     var ccn = claim.customClaimNumber;
