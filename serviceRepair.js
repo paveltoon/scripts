@@ -98,12 +98,23 @@ var oktmos = {
 };
 
 var remoteCon = new Mongo("10.10.80.100:27017");
-var cursor = db.claims.find({ "customClaimNumber": "M508-4837679797-32252818" }).forEach(function (claim) {
+var cursor = db.claims.find({
+    "customClaimNumber": {
+        $in: [
+            "M503-3542041767-32209585",
+            "M503-7681207432-32201079",
+            "M503-8988010798-32153296",
+            "M503-6591638034-32131213"
+        ]
+    }
+}).forEach(function (claim) {
     var ccn = claim.customClaimNumber;
     if (claim.service != (undefined && null)) {
         var srguId = claim.service.srguServiceId
         var dbName = oktmos[claim.oktmo];
-        if (oktmos[claim.oktmo] && remoteCon.getDB(dbName).services.find({ "serviceIdSrgu": srguId })[0]) {
+        if (oktmos[claim.oktmo] && remoteCon.getDB(dbName).services.find({
+                "serviceIdSrgu": srguId
+            })[0]) {
             //Connect DB
             var mfcDB = remoteCon.getDB(dbName);
             var serv = mfcDB.services.find({
@@ -132,12 +143,16 @@ var cursor = db.claims.find({ "customClaimNumber": "M508-4837679797-32252818" })
                 servData["srguServicePassportName"] = passNameFind[0].name;
             }
             // Save & Print
-            var upd = db.claims.update(
-                { "customClaimNumber": ccn },
-                { $set: { "service" : servData } },
-                { multi: true }
-            );
-            print(getActualDate(new Date()) + ' Claim: ' +  ccn + ' ' + dbName + ' corrected:' + upd.nModified + ' / ' + upd.nMatched)
+            var upd = db.claims.update({
+                "customClaimNumber": ccn
+            }, {
+                $set: {
+                    "service": servData
+                }
+            }, {
+                multi: true
+            });
+            print(getActualDate(new Date()) + ' Claim: ' + ccn + ' ' + dbName + ' corrected:' + upd.nModified + ' / ' + upd.nMatched)
         } else {
             // If wrong OKTMO, find same claims and paste service
             var wrongOKTMO = db.claims.find({
@@ -153,18 +168,22 @@ var cursor = db.claims.find({ "customClaimNumber": "M508-4837679797-32252818" })
                     $gte: ISODate("2019-08-31T21:00:00.000+0000")
                 }
             });
-            if(wrongOKTMO[0]){
+            if (wrongOKTMO[0]) {
                 var wrongServData = {}
-                for(var wKey in wrongOKTMO[0].service){
+                for (var wKey in wrongOKTMO[0].service) {
                     wrongServData[wKey] = wrongOKTMO[0].service[wKey];
                 }
-                
+
                 // Print & Save
-                var updwrong = db.claims.update(
-                    { "customClaimNumber": ccn },
-                    { $set: { "service" : wrongServData } },
-                    { multi: true }
-                );
+                var updwrong = db.claims.update({
+                    "customClaimNumber": ccn
+                }, {
+                    $set: {
+                        "service": wrongServData
+                    }
+                }, {
+                    multi: true
+                });
                 print(getActualDate(new Date()) + " Claim: " + ccn + ". Finded same claim with oktmo: " + claim.oktmo + ", corrected:" + updwrong.nModified + ' / ' + updwrong.nMatched)
             } else {
                 print(getActualDate(new Date()) + " [WARNING] Claim: " + ccn + " has wrong OKTMO: " + claim.oktmo + ", serviceId: " + srguId);

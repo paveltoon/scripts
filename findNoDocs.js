@@ -25,8 +25,10 @@ function getActualDate(date) {
 };
 print("Номер заявки;Наимнование услуги;Наименование процедуры;Дата создания заявки;Текущий статус;Департамент;МФЦ")
 var cursor = db.claims.find({
-    "service.srguDepartmentId": "5000000010000000255",
-    "claimCreate": { $gte: ISODate("2019-09-30T00:00:00.000+0000"), $lte: ISODate("2019-09-31T00:00:00.000+0000") }
+    "service.srguServiceId": "5000000000197114951",
+    "activationDate": {
+        $gte: ISODate("2019-12-31T21:00:00.000+0000")
+    }
 });
 
 cursor.forEach(function (claim) {
