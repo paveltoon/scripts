@@ -1,12 +1,5 @@
 var cursor = db.claims.find({
-      "activationDate": {
-        $gte: ISODate("2019-12-20T21:00:00.000+0000"),
-        $lte: ISODate("2020-01-06T21:00:00.000+0000")
-    },
-    "trustedPersons": {
-        $exists: false
-    },
-    "provLevel": "ОМСУ"
+    "customClaimNumber": "M506-0498823327-33357104"
 });
 cursor.forEach(function (claim) {
     var ccn = claim.customClaimNumber;
@@ -126,10 +119,6 @@ cursor.forEach(function (claim) {
 
         // Save and Print
         var upd = db.claims.update({
-            "activationDate": {
-                $gte: ISODate("2019-12-20T21:00:00.000+0000"),
-                $lte: ISODate("2020-01-06T21:00:00.000+0000")
-            },
             "trustedPersons": {
                 $exists: false
             },
@@ -143,7 +132,7 @@ cursor.forEach(function (claim) {
         });
 
         print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched);
-    } else if (!claim.personsInfo || !claim.personsInfo[0]){
+    } else if (!claim.personsInfo || !claim.personsInfo[0]) {
         print(ccn)
     }
 
