@@ -49,10 +49,9 @@ function getCalendar(year){
 };
 
 function daysBetweenDates(dateFirst, dateSecond) {
-    var first = dateFirst.getTime();
-    var second = dateSecond.getTime();
-
-    return Math.round((second - first) / (1000 * 60 * 60 * 24));
+    var first = dateFirst.setHours(0,0,0,0);
+    var second = dateSecond.setHours(0,0,0,0);
+    return Math.round((second - first) / (1000 * 60 * 60 * 24) - 1);
 }
 
 function calculateDeadline(startDate, deadline, workDays, day, oktmo){
@@ -247,23 +246,8 @@ claimCursor.forEach(function(claim){
     var suspenseDaysResult = 0;
 
     if (suspenseReason != undefined || suspenseReason != null) {
-
-        var statuses70 = db.claims_status.find({
-            "claimId": origClaimId.valueOf(),
-            $or: [{
-                "statusCode": "70"
-            }, {
-                "statusCode": "71"
-            }]
-        }).sort({
-            "statusDate": 1
-        }).toArray();
-        for (var j = 0; j < statuses70.length; j++) {
-            if (statuses70[j].statusCode == "70" && statuses70[j + 1]!= undefined && statuses70[j + 1].statusCode == "71") {
-				suspenseDaysResult += daysBetweenDates(statuses70[j].statusDate, statuses70[j + 1].statusDate);
-				
-            }
-        }
+		print("(!) Claim " + origClaimId + " have suspenses! skipped.");
+		return;
     }
 
     var startDateMs = startDate.setHours(0,0,0,0);
@@ -281,13 +265,13 @@ claimCursor.forEach(function(claim){
 		var daysInMs = deadlineDate - docSendDateInMs;
 		
 		// Add Suspense days
-		days = (daysInMs / 1000 / 60 / 60 / 24) + suspenseDaysResult;
+		days = (daysInMs / 1000 / 60 / 60 / 24);
 		daysToDeadline = days < 1 ? NumberInt(Math.ceil(days)): NumberInt(days);
 		completed = true;
 	} else if(claim.resultStatus == undefined && claim.docSendDate == undefined) {
 		var now = new Date().setHours(0,0,0,0);
 		var daysInMs = deadlineDate - now;
-		days = (daysInMs / 1000 / 60 / 60 / 24) + suspenseDaysResult;
+		days = (daysInMs / 1000 / 60 / 60 / 24);
 		daysToDeadline = days < 1 ? NumberInt(Math.ceil(days)): NumberInt(Math.floor(days));
 	} else {
 		print("(!) Claim " + origClaimId + " completed incorrectly, skipped.");
