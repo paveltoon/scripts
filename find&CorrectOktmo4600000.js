@@ -1,3 +1,6 @@
+var remoteConn = new Mongo("localhost:27017");
+var local = remoteConn.getDB('oktmoCorrect');
+
 db.claims.find({
     "oktmo": "46000000",
     $and: [{
@@ -24,6 +27,17 @@ db.claims.find({
     for (var i in fields) {
         if (fields[i].stringId == "municipality") {
             var oktmo = fields[i].value;
+            
+            // Save to local collection
+            var localClaim = {
+                "customClaimNumber": ccn,
+                "oldOktmo": claim.oktmo,
+                "newOktmo": oktmo,
+                "createDate": new Date(),
+            }
+            local.claims.save(localClaim);
+
+            // Update
             var upd = db.claims.update({
                 "_id": origId
             }, {
@@ -31,7 +45,7 @@ db.claims.find({
                     "oktmo": oktmo
                 }
             });
-            print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched)
+            print(ccn + ' ' + upd.nModified + ' / ' + upd.nMatched);
             return;
         } else if (i >= fields.length - 1 && fields[i].stringId != "municipality") {
             print(ccn)

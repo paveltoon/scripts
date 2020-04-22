@@ -128,7 +128,7 @@ function calculateDeadline(startDate, deadline, workDays, day, oktmo) {
 var claimCursor = db.getCollection("claims").find({
 	"customClaimNumber": {
 		$in: [
-			"P001-5475020493-22626042"
+			"M503-1621196309-34760464"
 		]
 	}
 }).addOption(DBQuery.Option.noTimeout);
@@ -242,17 +242,17 @@ claimCursor.forEach(function (claim) {
 	if (claim.suspenseReason != undefined) {
 
 		var suspenseReason = claim.suspenseReason;
-		var startDate = suspenseReason.createDate;
-		var suspenseCalendar = getCalendar(startDate.getFullYear());
+		var startSuspenseDate = suspenseReason.createDate;
+		var suspenseCalendar = getCalendar(startSuspenseDate.getFullYear());
 		var incDays = 0;
 		if (claim.currStatus.statusCode == "70") {
 			// If Working Days
 			if (suspenseReason.workingDays === true) {
 				var count = 0;
-				var daysCheck = getDayOfYear(startDate);
+				var daysCheck = getDayOfYear(startSuspenseDate);
 				// Calculate calendar days
 				while (count < suspenseReason.suspenseDays) {
-					if (suspenseCalendar.includes(daysCheck)) {
+					if (suspenseCalendar.indexOf(daysCheck) != -1) {
 						daysCheck++;
 						incDays++;
 					} else {
@@ -262,15 +262,15 @@ claimCursor.forEach(function (claim) {
 					// If new year is coming
 					if (daysCheck >= 365) {
 						daysCheck = 1;
-						suspenseCalendar = getCalendar(startDate.getFullYear() + 1);
+						suspenseCalendar = getCalendar(startSuspenseDate.getFullYear() + 1);
 					}
 				}
 			}
 			totalSuspenseDays = incDays + suspenseReason.suspenseDays;
-			var daysGone = daysBetweenDates(new Date(), startDate);
+			var daysGone = daysBetweenDates(new Date(), startSuspenseDate);
 			var susDays = totalSuspenseDays + daysGone;
-			if (susDays < 0){
-				print('[WARNING] Claim ' + ccn + ' has suspenseDays < 0');
+			if (susDays < 0) {
+				print('[WARNING] Claim ' + claim.customClaimNumber + ' has suspenseDays < 0');
 				return;
 			} else {
 				var susUpd = db.claims.update({
