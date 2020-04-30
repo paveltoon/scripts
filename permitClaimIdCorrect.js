@@ -1,6 +1,18 @@
-var remoteConn = new Mongo("eisgmu-rldd-int-rs1-dev:27017");
-var remote = remoteConn.getDB('mbkt-develop');
+var remotes = {
+    "DEV" : {
+        server: "eisgmu-rldd-int-rs1-dev:27017",
+        db: "mbkt-develop"
+    },
+    "PROD" : {
+        server: "10.10.80.32:27017",
+        db: "mbkt"
+    }
+}
+// Pick DEV or PROD connection
+var remoteConn = new Mongo(remotes.PROD.server);
+var remote = remoteConn.getDB(remotes.PROD.db);
 
+// Localhost connection to save lost claims
 var localConn = new Mongo("localhost:27017");
 var local = localConn.getDB('permit-claims');
 
@@ -12,7 +24,7 @@ remote.permits.find({
     "claimId": {
         $exists: false
     }
-}).forEach(function (permit) {
+}).limit(1).forEach(function (permit) {
     var permitId = permit._id;
     var code = permit.code;
     var ccn = "MBKT-" + code.split('').splice(0, 8).join('') + "-" + code.split('').splice(8).join('');
