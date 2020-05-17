@@ -1,10 +1,13 @@
+var login = "";
+var pass = "";
+
 var remotes = {
     "DEV" : {
         server: "eisgmu-rldd-int-rs1-dev:27017",
         db: "mbkt-develop"
     },
     "PROD" : {
-        server: "10.10.80.32:27017",
+        server: "mongodb://" + login + ":" + pass + "@10.10.80.31:27017/rldd2",
         db: "mbkt"
     }
 }
