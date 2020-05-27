@@ -6,38 +6,46 @@ db.persons.find({
   "dateOfBirth": {
     $exists: true
   }
-}).addOption(DBQuery.Option.noTimeout).limit(10).forEach(function (person) {
+}).addOption(DBQuery.Option.noTimeout).forEach(function (person) {
   var id = person._id;
   var age = getAge(person.dateOfBirth);
   if (age >= 65 && age < 160) {
     try {
       // --- Finally print Obj ---
       personData = {
-        fio:'',
-        passport: '',
+        surname:'',
+        firstName: '',
+        middleName: '',
+        passportSerial: '',
+        passportNumber: '',
+        snils: '',
         address: [],
         birthDate: person.dateOfBirth,
-        contacts: [],
+        phones: [],
+        emails: [],
       };
-      // --- Variables ---
-      var surname = person.surname;
-      var firstName = person.firstName;
-      var middleName = '';
-      if (person.middleName != undefined) {
-        middleName = person.middleName;
-      }
       // --- FIO ---
-      personData.fio = `${surname} ${firstName} ${middleName}`;
+      personData.surname = person.surname;
+      personData.firstName = person.firstName;
+      if (person.middleName != undefined) {
+        personData.middleName = person.middleName;
+      }
       // --- Passport ---
       if (person.currIdentityDoc != undefined) {
         var pd = person.currIdentityDoc;
-        personData.passport = `${pd.serial} ${pd.number}`
+        personData.passportSerial = pd.serial;
+        personData.passportNumber = pd.number;
       } else if (person.currIdentityDocId != undefined) {
         var pdi = person.currIdentityDocId.length == 24 ? ObjectId(person.currIdentityDocId) : person.currIdentityDocId;
         var doc = db.docs.findOne({"_id": pdi})
         if (doc != undefined) {
-          personData.passport = `${doc.serial} ${doc.number}`
+          personData.passportSerial = doc.serial;
+          personData.passportNumber = doc.number;
         }
+      }
+      // --- Snils ---
+      if (person.snils != undefined) {
+        personData.snils = person.snils;
       }
       // --- Address ---
       if (person.registrationAddressId != undefined) {
@@ -48,10 +56,23 @@ db.persons.find({
             "country": address.country,
             "region": address.region,
             "area": address.area,
+            "locality":address.locality,
             "street": address.street,
             "houseNumber": address.houseNumber,
             "corps": address.corps,
             "room": address.room
+          }
+          if (address.regionPrefix != undefined) {
+            addressObj.region = `${address.regionPrefix}. ${address.region}`;
+          }
+          if (address.areaPrefix != undefined) {
+            addressObj.area = `${address.areaPrefix}. ${address.area}`;
+          }
+          if (address.localityPrefix != undefined) {
+            addressObj.locality = `${address.localityPrefix}. ${address.locality}`;
+          }
+          if (address.streetPrefix != undefined) {
+            addressObj.street = `${address.streetPrefix}. ${address.street}`;
           }
           for (var obj in addressObj) {
             if(addressObj[obj] == undefined) {
@@ -66,11 +87,14 @@ db.persons.find({
       if (person.contacts != undefined && person.contacts.length) {
         for (var i in person.contacts) {
           var contact = person.contacts[i];
-          if (contact.value != ''.trim()) {
-            personData.contacts.push(contact.value); 
+          if (contact.type == 'EML' && contact.value != ''.trim()) {
+            personData.emails.push(contact.value); 
+          } else if (contact.value != ''.trim()){
+            personData.phones.push(contact.value); 
           }
         }
       }
+      // --- Full print ---
       printString = '';
       for(var da in personData) {
         printString += personData[da]+';';
