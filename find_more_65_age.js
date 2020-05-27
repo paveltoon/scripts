@@ -6,7 +6,7 @@ db.persons.find({
   "dateOfBirth": {
     $exists: true
   }
-}).addOption(DBQuery.Option.noTimeout).limit(160000).forEach(function (person) {
+}).addOption(DBQuery.Option.noTimeout).forEach(function (person) {
   var id = person._id;
   var age = getAge(person.dateOfBirth);
   if (age >= 65 && age < 160) {
