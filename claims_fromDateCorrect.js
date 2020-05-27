@@ -51,7 +51,7 @@ var findQuery = {
   "personsInfo": {
     $exists: true
   },
-  "activationDate": {
+  "claimCreate": {
     $gte: ISODate("2020-01-01T00:00:00+0300")
   }
 };
@@ -97,7 +97,7 @@ db.getCollection(base).find(findQuery).addOption(DBQuery.Option.noTimeout).forEa
           var reg = Regexps[z];
 
           if (reg.regex.test(fromDate)) {
-            updateData[`personsInfo.${i}.fromDate`] = reg.function(fromDate);
+            updateData[`personsInfo.${i}.currIdentityDoc.fromDate`] = reg.function(fromDate);
             regexMatched = true;
           }
         }
@@ -108,10 +108,10 @@ db.getCollection(base).find(findQuery).addOption(DBQuery.Option.noTimeout).forEa
   if (claim.trustedPersons != undefined && claim.trustedPersons.length) {
 
     for (var p in claim.trustedPersons) {
-      var person = claim.trustedPersons[p].trustedPerson.trustedPersonInfo;
+      var tPerson = claim.trustedPersons[p].trustedPerson.trustedPersonInfo;
 
-      if (person.dateOfBirth != undefined) {
-        var dateOfBirth = person.dateOfBirth instanceof Date ? getActualDate(person.dateOfBirth) : person.dateOfBirth;
+      if (tPerson.dateOfBirth != undefined) {
+        var dateOfBirth = tPerson.dateOfBirth instanceof Date ? getActualDate(tPerson.dateOfBirth) : tPerson.dateOfBirth;
 
         for (var k in Regexps) {
           var reg = Regexps[k];
@@ -123,14 +123,14 @@ db.getCollection(base).find(findQuery).addOption(DBQuery.Option.noTimeout).forEa
         }
       }
 
-      if (person.currIdentityDoc != undefined && person.currIdentityDoc.fromDate != undefined) {
-        var fromDate = person.currIdentityDoc.fromDate instanceof Date ? getActualDate(person.currIdentityDoc.fromDate) : person.currIdentityDoc.fromDate;
+      if (tPerson.currIdentityDoc != undefined && tPerson.currIdentityDoc.fromDate != undefined) {
+        var fromDate = tPerson.currIdentityDoc.fromDate instanceof Date ? getActualDate(tPerson.currIdentityDoc.fromDate) : tPerson.currIdentityDoc.fromDate;
 
         for (var v in Regexps) {
           var reg = Regexps[v];
 
           if (reg.regex.test(fromDate)) {
-            updateData[`trustedPersons.${p}.trustedPerson.trustedPersonInfo.fromDate`] = reg.function(fromDate);
+            updateData[`trustedPersons.${p}.trustedPerson.trustedPersonInfo.currIdentityDoc.fromDate`] = reg.function(fromDate);
             regexMatched = true;
           }
         }
